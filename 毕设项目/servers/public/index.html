@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/chen/css/style.css">
+
+    <script type="text/javascript" src="/chen/js/jquery.js"></script>
+    <!-- 前端模板渲染工具 -->
+    <script type="text/javascript" src="/chen/js/template-web.js"></script>
+    <!-- 弹窗工具 -->
+    <script type="text/javascript" src="/chen/js/dialog.js"></script>
+
+    <script type="text/javascript" src="/chen/js/index.js"></script>
+
+    <title>图书管理系统</title>
+    
+    <!--创建前端渲染数据的模板 -->
+    <script type="text/template" id="indexTpl">
+        {{each list}}
+        <tr>
+            <td>{{$value.id}}</td>
+            <td>{{$value.title}}</td>
+            <td>{{$value.author}}</td>
+            <td>{{$value.txttype}}</td>
+            <td><a href="javascript:;">修改</a>|<a href="javascript:;">删除</a></td>
+        <tr>    
+        {{/each}}
+    </script>
+
+</head>
+<body>
+    <div class="content">
+        <table cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                    <th>文本</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="dataList">
+                <!-- tbody里面的tr  td 以及数据 是通过访问数据接口后 根据数据情况进行动态创建 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 添加数据的弹窗 -->
+    <form class="form" id="addCommentForm">
+        <input type="hidden" name="id">
+        标题：<input type="text" name="title"><br>
+        作者：<input type="text" name="author"><br>
+        文本：<input type="text" name="txttype"><br>
+        <input type="button"  value="提交">
+    </form>
+</body>
+</html>
