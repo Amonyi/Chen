@@ -215,7 +215,6 @@ export default {
                 userimg:'',
                 ulevel:'',
                 sticknum:''
-
             },
             list:[],
             comments:[],
@@ -231,6 +230,7 @@ export default {
             searchData: "",
             username:window.sessionStorage.getItem('username'),
             userId:window.sessionStorage.getItem('userid'),
+            nickname:'',
         }
     },
     created() {
@@ -274,7 +274,7 @@ export default {
                                     num_tz:this.userInfo.sticknum,
                                     level:this.userInfo.ulevel,
                                     good_num:0,
-                                    bad_num:0
+                                    bad_num:0,
                                 }).then(function(data){
                                     if(data.body.flag == 1){
                                         Toast({
@@ -323,7 +323,7 @@ export default {
         getUserInfo(){
             this.$http.get("getuser/"+this.userId)
             .then(res=>{
-                    this.userInfo.username = res.body.userName
+                    this.userInfo.username = res.body.nickname
                     this.userInfo.userimg = res.body.user_img
                     this.userInfo.ulevel = res.body.level
                     this.userInfo.sticknum = res.body.stick_num
