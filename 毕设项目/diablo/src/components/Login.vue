@@ -232,6 +232,7 @@ export default {
               var length = users_t.length
               nameAll=[];
               passAll=[];
+              
             for(var i=0; i<length; i++){
               nameAll.push(users_t[i].userName);
               passAll.push(users_t[i].password);
@@ -245,10 +246,11 @@ export default {
             var index = nameAll.indexOf(this.ruleForm.user);
             if(passAll[index] === this.ruleForm.pass){
               window.sessionStorage.setItem('username',this.ruleForm.user)
+              window.sessionStorage.setItem('userid',users_t[index].id)
               Indicator.open('跳转页面中');
               var _this = this
               setTimeout(function(){
-                      _this .$router.push('/home');
+                      _this.$router.push('/home');
                       Indicator.close();
                    }, 1000); 
               

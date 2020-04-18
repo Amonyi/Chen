@@ -1,7 +1,7 @@
 <template>
     <div>
    <!-- 评论内容显示部分 -->
-        <div class="com-box" v-for="(item) in comments.slice(0,6).reverse()" :key="item.id">
+        <div class="com-box" v-for="(item) in list" :key="item.id">
             <div class="com-left">
                 <div class="tx-box">
                     <img :src="item.user_tx" alt="" >
@@ -28,7 +28,15 @@
             </div>
         </div>
         <!-- 评论内容显示部分 end -->
-        <el-pagination background layout="prev, pager, next" :total="70"></el-pagination>
+        <!-- 分页 -->
+        <!-- <el-pagination background layout="prev, pager, next" :total="70"></el-pagination> -->
+        <div class="pagebox">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="page"  :page-size="limit" background hide-on-single-page
+                layout="total, prev, pager, next, jumper" :total="total" >
+            </el-pagination>
+        </div>
+        <!-- 分页end -->
         <div class="comment-box">
             <textarea placeholder="请输入你想回复的内容" class="inp" v-model="msg"></textarea>
             <span>0/120</span>
@@ -51,6 +59,7 @@ textarea {
     height: 130px;
     font-size: 16px;
     line-height: 25px;
+    resize: none;
 }
 .comment-box button {
     float: right;
@@ -190,16 +199,9 @@ textarea {
 }
 .el-pagination {
     float: right;
-    padding: 20px 5px;
+    margin: 10px 0;
 }
-.el-pagination >>>button,
-.el-pagination >>>li{
-    width: 35px;
-    height: 35px;
-}
-.el-pagination >>>li {
-    line-height: 35px;
-}
+
 </style>
 
 <script>
@@ -208,46 +210,98 @@ import moment from 'moment'
 export default {
     data() {
         return {
+            userInfo:{
+                username:'',
+                userimg:'',
+                ulevel:'',
+                sticknum:''
+
+            },
+            list:[],
             comments:[],
             msg:'',//评论输入的内容
             com_num:'',
             // 转换时间的格式，传入数据库
             date:moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
             flag1:true,
-            flag2:true
+            flag2:true,
+            limit: 3, //每页数据条数
+            total: null,  
+            page: 1,  //当前页
+            searchData: "",
+            username:window.sessionStorage.getItem('username'),
+            userId:window.sessionStorage.getItem('userid'),
         }
     },
     created() {
         this.getComments();
+        this.getUserInfo();
     },
     methods: {
+      handleSizeChange(val) {
+        this.limit = val
+                this.getList()
+      },
+      handleCurrentChange(val) {
+        this.page = val
+                this.getList()
+      },
         getComments(){
             this.$http.get("getcom")
             .then(res=>{
                     this.comments = res.body
+                    this.getList()
             })
         },
+        getList() {
+                // es6过滤得到满足搜索条件的展示数据list
+                let list = this.comments.filter((item, index) =>
+                    item.content.includes(this.searchData)
+                )
+                this.list = list.filter((item, index) =>
+                    index < this.page * this.limit && index >= this.limit * (this.page - 1)
+                )
+                this.total = list.length
+            },
         postComment(){
-            this.$http.post("addcomments",{
-                user_name:'王五',
-                add_time:this.date,
-                content:this.msg,
-                user_tx:'',
-                num_tz:3,
-                level:5,
-                good_num:0,
-                bad_num:0
-            }).then(function(data){
-                if(data.body.flag == 1){
+            if(this.userId){
+                if(this.msg !=''){
+                    this.$http.post("addcomments",{
+                                    user_name:this.userInfo.username,
+                                    add_time:this.date,
+                                    content:this.msg,
+                                    user_tx:this.userInfo.userimg,
+                                    num_tz:this.userInfo.sticknum,
+                                    level:this.userInfo.ulevel,
+                                    good_num:0,
+                                    bad_num:0
+                                }).then(function(data){
+                                    if(data.body.flag == 1){
+                                        Toast({
+                                            message: '评论成功',
+                                            position: 'middle',
+                                            duration: 1500
+                                        });
+                                        this.getComments();
+                                        this.msg = ''
+                                    }
+                                })
+                }else if(this.msg ==''){
                     Toast({
-                        message: '评论成功',
+                        message: '内容不能为空！',
                         position: 'middle',
                         duration: 1500
                     });
-                    this.getComments();
-                    this.msg = ''
                 }
-            })
+                
+            }else {
+                Toast({
+                        message: '请先进行登录',
+                        position: 'middle',
+                        duration: 1500
+                    });
+            }
+            
         },
         like(item){
             item.good_num = this.flag1 ? item.good_num + 1 : item.good_num - 1;
@@ -265,6 +319,15 @@ export default {
                 item.good_num = item.good_num-1
                 this.flag1=true;
             }
+        },
+        getUserInfo(){
+            this.$http.get("getuser/"+this.userId)
+            .then(res=>{
+                    this.userInfo.username = res.body.userName
+                    this.userInfo.userimg = res.body.user_img
+                    this.userInfo.ulevel = res.body.level
+                    this.userInfo.sticknum = res.body.stick_num
+            })
         }
     },
     mounted() {

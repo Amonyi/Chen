@@ -17,9 +17,10 @@
                     <li class="succlogin">
                         <el-dropdown>
                         <span class="el-dropdown-link">
-                            {{succ_user}}<i class="el-icon-arrow-down el-icon--right"></i>
+                            欢迎您，{{usernickname}}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item><router-link to="/home/personalcenter">个人中心</router-link></el-dropdown-item>
                             <el-dropdown-item><a href="javascript:" @click="log_off">退出登录</a></el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
@@ -278,18 +279,26 @@ export default {
            cName:"bar",
            login_flag1:'',
             login_flag2:'',
-            succ_user:window.sessionStorage.getItem('username')
+            userid:window.sessionStorage.getItem('userid'),
+            usernickname:''
 
         }
     },
     created() {
         this.login_check()
+        this.getnickname()
     },
     methods: {
+        getnickname(){
+            this.$http.get("getuser/"+this.userid)
+            .then(result=>{
+                this.usernickname = result.body.nickname
+            })
+        },
         login_check(){
-            if(this.succ_user == null){
+            if(this.userid == null){
                 this.login_flag1= true
-            }else if(this.succ_user != null){
+            }else if(this.userid != null){
                 this.login_flag2= true
             }
         },

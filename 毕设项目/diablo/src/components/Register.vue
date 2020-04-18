@@ -274,7 +274,12 @@ export default {
             this.$http.post('adduser',{
               userName:this.ruleForm.email,
               password:this.ruleForm.pass,
-              add_time:this.date
+              add_time:this.date,
+              user_img:'http://localhost:3000/src/images/uimg.jpg',
+              level:1,
+              stick_num:0,
+              nickname:this.ruleForm.email,
+              sex:3
             }).then(function(data){
               if(data.body.flag ==1){
                 Toast({

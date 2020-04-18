@@ -187,7 +187,7 @@ exports.getUserById=(req,res)=>{
        res.json(result[0]);
     })
 }
-
+// 修改密码
 exports.editUser=(req,res)=>{
     let info = req.body
     let sql = "update user set password=? where id =?";
@@ -229,6 +229,19 @@ exports.addUser=(req,res)=>{
     })
 }
 
+// 修改用户详细信息
+exports.editUserInfo=(req,res)=>{
+    let info = req.body
+    let sql = "update user set nickname=?,user_img=?,sex=?,signature=? where id =?";
+    let data = [info.nickname,info.user_img,info.sex,info.signature,info.id];
+    db.base(sql,data,(result)=>{
+        if(result.affectedRows>0){
+            res.json({flag:1})
+        }else{
+            res.json({flag:0})
+        }
+    })
+}
 // 添加
 exports.addComment=(req,res)=>{
     let info = req.body;
@@ -379,4 +392,3 @@ exports.delBlueStick=(req,res)=>{
         }
     })
 }
-

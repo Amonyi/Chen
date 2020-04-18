@@ -17,10 +17,9 @@
                     <li class="succlogin">
                         <el-dropdown>
                         <span class="el-dropdown-link">
-                            欢迎您，{{usernickname}}<i class="el-icon-arrow-down el-icon--right"></i>
+                            欢迎您,{{nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item><router-link to="/home/personalcenter">个人中心</router-link></el-dropdown-item>
                             <el-dropdown-item><a href="javascript:" @click="log_off">退出登录</a></el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
@@ -33,10 +32,33 @@
             <div class="d3-bg">
                 <div class="wrapper">
                     <div class="contents clearfix">
-                        <!-- 这是主体组件切换部分 -->
-                        <transition mode="out-in">
-                            <component :is='cName'></component> 
-                        </transition>
+                        <!-- 主体部分 start-->
+                        <div class="personal-main">
+                            <div class="per-left">
+                                <!-- 头像 -->
+                                <div class="l-uimg">
+                                    <div class="uimg">
+                                        <img :src="uimage" alt="">
+                                    </div>
+                                    <div class="uname">
+                                        <p>欢迎您，</p>
+                                        <p class="nick-name">{{nickname}}</p>
+                                    </div>
+                                </div>
+                                <!-- 导航 -->
+                                <ul class="cen-menu">
+                                    <h4>个人中心</h4>
+                                    <li @click.prevent="cName='information'"><a href="#" >基本信息</a><span class="el-icon-arrow-right"></span> </li>
+                                    <li @click.prevent="cName='account'"><a href="#" >修改密码</a><span class="el-icon-arrow-right"></span> </li>
+                                </ul>
+                            </div>
+                            <div class="per-right">
+                                <transition mode="out-in">
+                                    <component :is='cName'></component> 
+                                </transition>
+                            </div>
+                        </div>
+                        <!-- 主体部分 end -->
                     </div>
                     <!-- 页脚 -->
                     <div class="footer">
@@ -197,48 +219,137 @@ a {
     height: 55px;
     background-image: url(../images/gotop.jpg);
 }
+.personal-main {
+    width: 100%;
+    height: 600px;
+    background-color: #d1c39b;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    
+}
+.personal-main .per-left {
+    width: 20%;
+    border-right:1px solid gray; 
+    /* background-color: red; */
+}
+.personal-main .per-right {
+    width: 80%;
+    /* background-color: blue; */
+}
+.personal-main .per-left .l-uimg {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    border-bottom: 1px dashed black;
+    padding: 25px 10px;
+}
+.l-uimg .uimg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid black;
+}
+.l-uimg .uimg img {
+    width: 100%;
+    height: 100%;
+}
+.l-uimg .uname {
+    width: 50%;
+    margin: 25px 0px 25px 0;
+}
+.l-uimg .uname p {
+    color: #000;
+}
+.l-uimg .uname .nick-name {
+    margin-top: -12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.per-left .cen-menu {
+    padding: 10px 0;
+}
+.per-left .cen-menu h4 {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+}
+.per-left .cen-menu li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 45px;
+    padding: 0 10px;
+    /* border-top: 1px solid gray;s */
+}
+.per-left .cen-menu li:hover a,
+.per-left .cen-menu li:hover span {
+    color: white;
+}
+.per-left .cen-menu li a {
+    color: #000;
+    height: 45px;
+    line-height: 45px;
+}
 </style>
 
 
 <script>
-import baseContents from './BaseContents.vue'
+import information from './PersonalCenter/Information.vue'
+import account from './PersonalCenter/Account.vue'
 export default {
     inject:['reload'],
     data() {
         return {
-            cName:'baseContents',
+            cName:"information",
             login_flag1:'',
             login_flag2:'',
             succ_user:window.sessionStorage.getItem('username'),
-            userid:window.sessionStorage.getItem('userid'),
-            usernickname:''
+            uid:window.sessionStorage.getItem('userid'),
+            uimage:'',
+            nickname:''
         }
     },
     created() {
         this.login_check()
-        this.getnickname()
+        this.getUimg()
     },
     methods: {
-        getnickname(){
-            this.$http.get("getuser/"+this.userid)
-            .then(result=>{
-                this.usernickname = result.body.nickname
-            })
-        },
         login_check(){
-            if(this.userid == null){
+            if(this.uid == null){
                 this.login_flag1= true
-            }else if(this.userid != null){
+            }else if(this.uid != null){
                 this.login_flag2= true
             }
         },
         log_off() {
             window.sessionStorage.clear()
              this.reload()
-        }
+             this.$router.push('/home');
+        },
+        getUimg(){
+        this.$http.get("getuser/"+this.uid)
+            .then(result=>{
+                this.uimage = result.body.user_img
+                this.nickname = result.body.nickname
+
+            })
+      }
     },
     components:{
-        baseContents:baseContents,
-    }
+        information:information,
+        account:account,
+    },
+    mounted() {
+        $('.cen-menu > li').click(function(){
+            $(this).children().css('color','white')
+            $(this).siblings('li').children().css('color','black')
+        })
+    },
 }
 </script>

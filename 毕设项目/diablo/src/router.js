@@ -10,6 +10,7 @@ import tribune from "./components/Tribune.vue"
 import adminlogin from "./components/AdminLogin.vue"
 import management from "./components/Management.vue"
 import video from "./components/video.vue"
+import personal from "./components/PersonalCenter.vue"
 
 
 
@@ -25,6 +26,7 @@ var router = new VueRouter({
         {path:"/management",component:management,meta:{isLogin:true}},
         {path:"/adminlogin",component:adminlogin},
         {path:"/home/video",component:video},
+        {path:"/home/personalcenter",component:personal},
     ],
     linkActiveClass:"mui-active"
 })

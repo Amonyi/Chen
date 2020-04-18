@@ -7,7 +7,7 @@
                    
                     <el-dropdown>
                         <span class="el-dropdown-link">
-                            {{administrators}}
+                            欢迎您，{{administrators}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50527
 File Encoding         : 65001
 
-Date: 2020-04-13 17:52:43
+Date: 2020-04-18 16:14:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -74,7 +74,7 @@ CREATE TABLE `comments` (
   `good_num` int(11) DEFAULT NULL,
   `bad_num` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of comments
@@ -279,17 +279,22 @@ CREATE TABLE `user` (
   `userName` varchar(20) DEFAULT NULL,
   `password` varchar(20) DEFAULT NULL,
   `add_time` datetime DEFAULT NULL,
+  `user_img` varchar(255) DEFAULT NULL,
+  `level` varchar(255) DEFAULT NULL,
+  `stick_num` int(11) DEFAULT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `sex` int(11) DEFAULT NULL,
+  `signature` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('2', '329472242@qq.com', '987654321', '2020-04-07 15:29:31');
-INSERT INTO `user` VALUES ('3', '763071532@qq.com', '123456789', '2020-04-07 16:29:34');
-INSERT INTO `user` VALUES ('17', '3079297144@qq.com', 'cbf3079297144', '2020-04-09 21:32:02');
-INSERT INTO `user` VALUES ('29', '123456789@qq.com', '123456789', '2020-04-10 13:20:09');
-INSERT INTO `user` VALUES ('30', '202042@qq.com', '20200413', '2020-04-13 14:45:22');
+INSERT INTO `user` VALUES ('2', '329472242@qq.com', '987654321', '2020-04-07 15:29:31', 'http://localhost:3000/src/images/uimg.jpg', '1', '0', '329472242@qq.com', null, null);
+INSERT INTO `user` VALUES ('3', '763071532@qq.com', '123456789', '2020-04-07 16:29:34', 'http://localhost:3000/src/images/uimg.jpg', '1', '0', '763071532@qq.com', null, null);
+INSERT INTO `user` VALUES ('17', '3079297144@qq.com', 'cbf3079297144', '2020-04-09 21:32:02', 'http://localhost:3000/src/images/uimg.jpg', '1', '0', '简墨', '1', '宁听繁华曲，不做繁华主！');
+INSERT INTO `user` VALUES ('34', '20200416@qq.com', '20200416', '2020-04-16 21:58:35', 'http://localhost:3000/src/images/tx.jpg', '1', '0', 'Amonyi丶', '1', '测试');
 
 -- ----------------------------
 -- Table structure for video

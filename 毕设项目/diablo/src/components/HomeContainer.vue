@@ -17,9 +17,10 @@
                     <li class="succlogin">
                         <el-dropdown>
                         <span class="el-dropdown-link">
-                            {{succ_user}}<i class="el-icon-arrow-down el-icon--right"></i>
+                            欢迎您，{{usernickname}}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item><router-link to="/home/personalcenter">个人中心</router-link></el-dropdown-item>
                             <el-dropdown-item><a href="javascript:" @click="log_off">退出登录</a></el-dropdown-item>
                         </el-dropdown-menu>
                         </el-dropdown>
@@ -1248,10 +1249,13 @@ export default {
             herobuild:[],
             bluesticks:[],
             gamedatas:[],
-            succ_user:window.sessionStorage.getItem('username')
+            usernickname:"",
+            succ_user:window.sessionStorage.getItem('username'),
+            userid:window.sessionStorage.getItem('userid'),
         }
     },
     created() {
+        this.getnickname();
         this.login_check();
         this.getComment();
         this. getLunBoTu();
@@ -1263,6 +1267,12 @@ export default {
         this.getGameData();
     },
     methods: {
+        getnickname(){
+            this.$http.get("getuser/"+this.userid)
+            .then(result=>{
+                this.usernickname = result.body.nickname
+            })
+        },
         getComment(){
             this.$http.get("comments")
             .then(result=>{

@@ -17,7 +17,7 @@
                     <li class="succlogin">
                         <el-dropdown>
                         <span class="el-dropdown-link">
-                            {{succ_user}}<i class="el-icon-arrow-down el-icon--right"></i>
+                            欢迎您,{{succ_user}}<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item><a href="javascript:" @click="log_off">退出登录</a></el-dropdown-item>
